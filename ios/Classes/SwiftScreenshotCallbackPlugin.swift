@@ -18,6 +18,7 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
     }
   }
 
+  @available(iOS 11, *)
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     if(call.method == "initialize"){
         if(SwiftScreenshotCallbackPlugin.observer != nil) {
@@ -37,6 +38,7 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
           }
           result("screen shot called")
         }
+
         SwiftScreenshotCallbackPlugin.recordingObserver = NotificationCenter.default.addObserver(
           forName: UIScreen.capturedDidChangeNotification,
           object: nil,
