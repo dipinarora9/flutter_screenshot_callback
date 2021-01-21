@@ -18,9 +18,9 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  @available(iOS 11, *)
+
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    if(call.method == "initialize"){
+    if (call.method == "initialize") {
         if(SwiftScreenshotCallbackPlugin.observer != nil) {
             NotificationCenter.default.removeObserver(SwiftScreenshotCallbackPlugin.observer!);
             SwiftScreenshotCallbackPlugin.observer = nil;
@@ -39,17 +39,19 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
           result("screen shot called")
         }
 
-        SwiftScreenshotCallbackPlugin.recordingObserver = NotificationCenter.default.addObserver(
-          forName: UIScreen.capturedDidChangeNotification,
-          object: nil,
-          queue: .main) { notification in
-          if let channel = SwiftScreenshotCallbackPlugin.channel {
-            channel.invokeMethod("onCallback", arguments: nil)
-          }
-          result("screen recording turned on")
+        if (@available(iOS 11.0, *)) {
+            SwiftScreenshotCallbackPlugin.recordingObserver = NotificationCenter.default.addObserver(
+                      forName: UIScreen.capturedDidChangeNotification,
+                      object: nil,
+                      queue: .main) { notification in
+                      if let channel = SwiftScreenshotCallbackPlugin.channel {
+                        channel.invokeMethod("onCallback", arguments: nil)
+                      }
+                result("screen recording turned on")
+            }
         }
       result("initialize")
-    } else if(call.method == "dispose"){
+    } else if(call.method == "dispose") {
         if(SwiftScreenshotCallbackPlugin.observer != nil) {
             NotificationCenter.default.removeObserver(SwiftScreenshotCallbackPlugin.observer!);
             SwiftScreenshotCallbackPlugin.observer = nil;
@@ -59,7 +61,7 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
             SwiftScreenshotCallbackPlugin.recordingObserver = nil;
         }
         result("dispose")
-    }else{
+    } else {
       result("")
     }
   }
