@@ -40,6 +40,12 @@ public class SwiftScreenshotCallbackPlugin: NSObject, FlutterPlugin {
         }
 
         if #available(iOS 11.0, *) {
+            if UIScreen.main.isCaptured {
+                    print("Screen recording detected then we force the immediate exit of the app!")
+                    if let channel = SwiftScreenshotCallbackPlugin.channel {
+                        channel.invokeMethod("onCallback", arguments: nil)
+                    }
+            }
             SwiftScreenshotCallbackPlugin.recordingObserver = NotificationCenter.default.addObserver(
                       forName: UIScreen.capturedDidChangeNotification,
                       object: nil,
